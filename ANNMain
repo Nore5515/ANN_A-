@@ -3,11 +3,11 @@ import java.util.ArrayList;
 
 //PLANNING
 //Goal
-  //To write an ANN that finds the fastest path from point S to point E
+//To write an ANN that finds the fastest path from point S to point E
 //Proccedure
-  //Write a Node Map that has several nodes connected with weights
+//Write a Node Map that has several nodes connected with weights
     //See Included file "Sadfig.png"
-  //Write an ANN to figure out the fastest path
+//Write an ANN to figure out the fastest path
     //Get Random ready
     //Initial ANN is completely random choice; ignores all weights
     //Create new ANN that is same thing, just slightly different.
@@ -16,132 +16,150 @@ import java.util.ArrayList;
 
 
 public class ANNMain{
-  public static void main(String args[]){
-    System.out.println("Hello world!");
-    NodeMap nm = new NodeMap();
-    for (int x = 0; x < nm.nodes.size(); x++){
-      for (int y = 0; y < nm.nodes.get(x).children.size(); y++){
-        System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights
-      }
+    public static void main(String args[]){
+        System.out.println("Hello world!");
+        NodeMap nm = new NodeMap();
+        for (int x = 0; x < nm.nodes.size(); x++){
+            for (int y = 0; y < nm.nodes.get(x).children.size(); y++){
+                //System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights(nm.nodes.get(x),nm.nodes.get(x).children.get(y)));
+            }
+        }
+
     }
-    System.out.println("Weight between J and E: " + nm.NodeWeights("J","E"));
-    System.out.println("Weight between K and E: " + nm.NodeWeights("K","E"));
-  }
+}
+
+//Layout is to have 1 hidden layer and 1 input layer
+//ANN is given a list of options and their weights
+//it has a
+class ANN{
+
+    float gene1,gene2,gene3;
+
+    public ANN(){
+        Random rand = new Random();
+        gene1 = (rand.nextFloat() * 2.0f) - 1.0f;
+    }
 }
 
 //Basing it off of the attatched file "Sadfig.png"
 class NodeMap{
-  ArrayList<Node> nodes;
-  
-  public NodeMap(){
-    nodes = new ArrayList<Node>();
-    Node e = new Node("E");
-    Node k = new Node("K");
-    Node j = new Node("J");
-    Node g = new Node("G");
-    Node h = new Node("H");
-    Node f = new Node("F");
-    Node s = new Node("S");
-    Node a = new Node("A");
-    Node b = new Node("B");
-    Node c = new Node("C");
-    Node d = new Node("D");
-    
-    //Node Adding
-    e.ChildNode(j,2);
-    e.ChildNode(k,7);
-    e.ChildNode(c,4);
-    nodes.add(e);
-    k.ChildNode(e, 7);
-    k.ChildNode(j,1);
-    nodes.add(k);
-    j.ChildNode(e, 2);
-    j.ChildNode(k,1);
-    nodes.add(j);
-    g.ChildNode(j,5);
-    g.ChildNode(k,2);
-    g.ChildNode(f,6);
-    g.ChildNode(h,2);
-    nodes.add(g);
-    h.ChildNode(f,2);
-    h.ChildNode(g,2);
-    nodes.add(h);
-    f.ChildNode(g,6);
-    f.ChildNode(h,2);
-    f.ChildNode(s,3);
-    nodes.add(f);
-    s.ChildNode(f,3);
-    s.ChildNode(a,7);
-    nodes.add(s);
-    a.ChildNode(s,7);
-    a.ChildNode(b,3);
-    nodes.add(a);
-    b.ChildNode(a,3);
-    b.ChildNode(d,1);
-    b.ChildNode(c,9);
-    nodes.add(b);
-    c.ChildNode(b,9);
-    c.ChildNode(d,3);
-    c.ChildNode(e,4);
-    nodes.add(c);
-    d.ChildNode(b,1);
-    d.ChildNode(c,3);
-  }
-  
-  public Node GetNode(String s){
-    if (nodes.size() > 0){
-      for (int x = 0; x < nodes.size(); x++){
-        if (nodes.get(x).name.equals(s)){
-          return nodes.get(x);
-        }
-      }
+    ArrayList<Node> nodes;
+
+    public NodeMap(){
+        nodes = new ArrayList<Node>();
+        Node e = new Node("E");
+        Node k = new Node("K");
+        Node j = new Node("J");
+        Node g = new Node("G");
+        Node h = new Node("H");
+        Node f = new Node("F");
+        Node s = new Node("S");
+        Node a = new Node("A");
+        Node b = new Node("B");
+        Node c = new Node("C");
+        Node d = new Node("D");
+
+        //Node Adding
+        e.ChildNode(j,2);
+        e.ChildNode(k,7);
+        e.ChildNode(c,4);
+        nodes.add(e);
+        k.ChildNode(e, 7);
+        k.ChildNode(j,1);
+        k.ChildNode(g,2);
+        nodes.add(k);
+        j.ChildNode(e, 2);
+        j.ChildNode(k,1);
+        j.ChildNode(g,5);
+        nodes.add(j);
+        g.ChildNode(j,5);
+        g.ChildNode(k,2);
+        g.ChildNode(f,6);
+        g.ChildNode(h,2);
+        nodes.add(g);
+        h.ChildNode(f,2);
+        h.ChildNode(g,2);
+        nodes.add(h);
+        f.ChildNode(g,6);
+        f.ChildNode(h,2);
+        f.ChildNode(s,3);
+        nodes.add(f);
+        s.ChildNode(f,3);
+        s.ChildNode(a,7);
+        nodes.add(s);
+        a.ChildNode(s,7);
+        a.ChildNode(b,3);
+        nodes.add(a);
+        b.ChildNode(a,3);
+        b.ChildNode(d,1);
+        b.ChildNode(c,9);
+        nodes.add(b);
+        c.ChildNode(b,9);
+        c.ChildNode(d,3);
+        c.ChildNode(e,4);
+        nodes.add(c);
+        d.ChildNode(b,1);
+        d.ChildNode(c,3);
+        nodes.add(d);
     }
-    return null;
-  }
-  
-  public int NodeWeights(String nameStart, String nameEnd){
-    Node start = GetNode(nameStart);
-    Node end = GetNode(nameEnd);
-    return start.GetChildWeight(end);
-  }
+
+    public Node GetNode(String s){
+        if (nodes.size() > 0){
+            for (int x = 0; x < nodes.size(); x++){
+                if (nodes.get(x).name.equals(s)){
+                    return nodes.get(x);
+                }
+            }
+        }
+        return null;
+    }
+
+    public int NodeWeights(String nameStart, String nameEnd){
+        Node start = GetNode(nameStart);
+        Node end = GetNode(nameEnd);
+        return start.GetChildWeight(end);
+    }
+    public int NodeWeights(Node start, Node end){
+        return start.GetChildWeight(end);
+    }
 }
 
 class Node{
-  ArrayList<Node> children;
-  ArrayList<Integer> weights;
-  String name;
-  
-  public Node(String s){
-    children = new ArrayList<Node>();
-    weights = new ArrayList<Integer>();
-    name = s;
-  }
-  
-  public int GetChildWeight(Node maybeChild){
-    if (children.size() > 0){
-      for (int x = 0; x < children.size(); x++){
-        if (children.get(x).name.equals(maybeChild.name)){
-          return weights.get(x);
+    ArrayList<Node> children;
+    ArrayList<Integer> weights;
+    String name;
+
+    public Node(String s){
+        children = new ArrayList<Node>();
+        weights = new ArrayList<Integer>();
+        name = s;
+    }
+
+    public int GetChildWeight(Node maybeChild){
+        if (children.size() > 0){
+            for (int x = 0; x < children.size(); x++){
+                if (children.get(x).name.equals(maybeChild.name)){
+                    return weights.get(x);
+                }
+            }
         }
-      }
+        return -999999;
     }
-    return -999999;
-  }
-  
-  public void ChildNode(Node n, int weight){
-    children.add(n);
-    weights.add(weight);
-  }
-  
-  public Node GetRandomChild(){
-    Random rand = new Random();
-    if (children.size() > 1){
-      return children.get(rand.nextInt(children.size()));
-    }else if (children.size() == 1){
-      return children.get(0);
-    }else{
-      return null;
+
+    public void ChildNode(Node n, int weight){
+        children.add(n);
+        weights.add(weight);
     }
-  }
-  
+
+    public Node GetRandomChild(){
+        Random rand = new Random();
+        if (children.size() > 1){
+            return children.get(rand.nextInt(children.size()));
+        }else if (children.size() == 1){
+            return children.get(0);
+        }else{
+            return null;
+        }
+    }
+
 }
