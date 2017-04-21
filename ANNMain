@@ -1,0 +1,57 @@
+import java.util.Random;
+
+//PLANNING
+//Goal
+  //To write an ANN that finds the fastest path from point S to point E
+//Proccedure
+  //Write a Node Map that has several nodes connected with weights
+    //See Included file "Sadfig.png"
+  //Write an ANN to figure out the fastest path
+    //Get Random ready
+    //Initial ANN is completely random choice; ignores all weights
+    //Create new ANN that is same thing, just slightly different.
+    //Compare two ANNs total weight; keep genes of best one
+    //Every 10 ANNs, create totally new random one and compare
+
+
+public class ANNMain{
+  public static void main(String args[]){
+    System.out.println("Hello world!");
+    
+  }
+}
+
+//Basing it off of the attatched file "Sadfig.png"
+class NodeMap{
+  ArrayList<Node> nodes;
+  
+  public NodeMap(){
+    nodes.add(new Node(
+  }
+}
+
+class Node{
+  ArrayList<Node> children;
+  String name;
+  
+  public Node(String s){
+    children = new ArrayList<Node>();
+    name = s;
+  }
+  
+  public void ChildNode(Node n){
+    children.add(n);
+  }
+  
+  public Node GetRandomChild(){
+    Random rand = new Random();
+    if (children.size() > 1){
+      return children.get(rand.nextInt(children.size()));
+    }else if (children.size() == 1){
+      return children.get(0);
+    }else{
+      return null;
+    }
+  }
+  
+}
