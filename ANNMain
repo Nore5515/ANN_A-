@@ -19,6 +19,11 @@ public class ANNMain{
   public static void main(String args[]){
     System.out.println("Hello world!");
     NodeMap nm = new NodeMap();
+    for (int x = 0; x < nm.nodes.size(); x++){
+      for (int y = 0; y < nm.nodes.get(x).children.size(); y++){
+        System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights
+      }
+    }
     System.out.println("Weight between J and E: " + nm.NodeWeights("J","E"));
     System.out.println("Weight between K and E: " + nm.NodeWeights("K","E"));
   }
