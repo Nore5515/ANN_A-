@@ -33,11 +33,19 @@ class NodeMap{
     Node e = new Node("E");
     Node k = new Node("K");
     Node j = new Node("J");
-    Node g = new Node
+    Node g = new Node("G");
+    Node h = new Node("H");
+    Node f = new Node("F");
+    Node s = new Node("S");
+    Node a = new Node("A");
+    Node b = new Node("B");
+    Node c = new Node("C");
+    Node d = new Node("D");
     
     //Node Adding
     e.ChildNode(j,2);
     e.ChildNode(k,7);
+    e.ChildNode(c,4);
     nodes.add(e);
     k.ChildNode(e, 7);
     k.ChildNode(j,1);
@@ -45,7 +53,34 @@ class NodeMap{
     j.ChildNode(e, 2);
     j.ChildNode(k,1);
     nodes.add(j);
-    
+    g.ChildNode(j,5);
+    g.ChildNode(k,2);
+    g.ChildNode(f,6);
+    g.ChildNode(h,2);
+    nodes.add(g);
+    h.ChildNode(f,2);
+    h.ChildNode(g,2);
+    nodes.add(h);
+    f.ChildNode(g,6);
+    f.ChildNode(h,2);
+    f.ChildNode(s,3);
+    nodes.add(f);
+    s.ChildNode(f,3);
+    s.ChildNode(a,7);
+    nodes.add(s);
+    a.ChildNode(s,7);
+    a.ChildNode(b,3);
+    nodes.add(a);
+    b.ChildNode(a,3);
+    b.ChildNode(d,1);
+    b.ChildNode(c,9);
+    nodes.add(b);
+    c.ChildNode(b,9);
+    c.ChildNode(d,3);
+    c.ChildNode(e,4);
+    nodes.add(c);
+    d.ChildNode(b,1);
+    d.ChildNode(c,3);
   }
   
   public Node GetNode(String s){
