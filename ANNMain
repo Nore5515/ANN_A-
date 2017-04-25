@@ -19,26 +19,52 @@ public class ANNMain{
     public static void main(String args[]){
         System.out.println("Hello world!");
         NodeMap nm = new NodeMap();
-        for (int x = 0; x < nm.nodes.size(); x++){
+        /*for (int x = 0; x < nm.nodes.size(); x++){
             for (int y = 0; y < nm.nodes.get(x).children.size(); y++){
-                //System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights(nm.nodes.get(x),nm.nodes.get(x).children.get(y)));
+                System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights(nm.nodes.get(x),nm.nodes.get(x).children.get(y)));
             }
-        }
+        }*/
+      	
 
     }
 }
 
 //Layout is to have 1 hidden layer and 1 input layer
 //ANN is given a list of options and their weights
-//it has a
+//it has a 
+//ANN design
 class ANN{
-
-    float gene1,gene2,gene3;
-
-    public ANN(){
-        Random rand = new Random();
-        gene1 = (rand.nextFloat() * 2.0f) - 1.0f;
+		
+  ArrayList<Node> nodePath;
+  NodeMap nm;
+  Node currentNode;
+  float g1,g2,ga1,ga2,ga3;
+  float hid1,hid2;
+  float out1,out2,out3;
+  
+  //New, Random ANN
+  public ANN(NodeMap _nm){
+  	Random rand = new Random();
+    nm = _nm;
+    currentNode = nm.GetNode("S");
+    nodePath = new ArrayList<Node>();
+    nodePath.add(currentNode);
+    
+    //Generate genes that are between -1.0f and 1.0f
+    g1 = rand.nextFloat()*2.0f-1.0f;
+    g2 = rand.nextFloat()*2.0f-1.0f;
+    ga1 = rand.nextFloat()*2.0f-1.0f;
+    ga2 = rand.nextFloat()*2.0f-1.0f;
+    ga3 = rand.nextFloat()*2.0f-1.0f;
+  }
+  
+  public Node nextNode(){
+    for (int x = 0; x < currentNode.children.size(); x++){
+    	
     }
+    return currentNode;
+  }
+  
 }
 
 //Basing it off of the attatched file "Sadfig.png"
