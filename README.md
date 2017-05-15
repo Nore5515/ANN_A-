@@ -6,7 +6,7 @@ To create an ANN to find the fastest path from start to destination.
   a) Node needs to have a list for children <br />
   b) Node needs links between both <br />
   c) Links should have weights <br />
-  d) Node should have a ToString to see parents and children <br />
+  d) Node should have a ToString to see children <br />
 2) Node Tree <br />
   a) Be able to use default (see help.png) <br />
   b) Be able to create my own node tree <br />
