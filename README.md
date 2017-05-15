@@ -3,7 +3,7 @@ To create an ANN to find the fastest path from start to destination.
 
 # TO-DO
 1) Develop node <br />
-  a) Node needs to have a list for parents and children <br />
+  a) Node needs to have a list for parents <br />
   b) Node needs links between both <br />
   c) Links should have weights <br />
   d) Node should have a ToString to see parents and children <br />
