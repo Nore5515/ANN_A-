@@ -1,78 +1,89 @@
+import java.io.*;
 import java.util.Random;
 import java.util.ArrayList;
+import java.util.Scanner;
 
 //PLANNING
 //Goal
 //To write an ANN that finds the fastest path from point S to point E
 //Proccedure
 //Write a Node Map that has several nodes connected with weights
-    //See Included file "Sadfig.png"
+//See Included file "Sadfig.png"
 //Write an ANN to figure out the fastest path
-    //Get Random ready
-    //Initial ANN is completely random choice; ignores all weights
-    //Create new ANN that is same thing, just slightly different.
-    //Compare two ANNs total weight; keep genes of best one
-    //Every 10 ANNs, create totally new random one and compare
+//Get Random ready
+//Initial ANN is completely random choice; ignores all weights
+//Create new ANN that is same thing, just slightly different.
+//Compare two ANNs total weight; keep genes of best one
+//Every 10 ANNs, create totally new random one and compare
 
 
 public class ANNMain{
     public static void main(String args[]){
         System.out.println("Hello world!");
         NodeMap nm = new NodeMap();
-        /*for (int x = 0; x < nm.nodes.size(); x++){
-            for (int y = 0; y < nm.nodes.get(x).children.size(); y++){
-                System.out.println(nm.nodes.get(x).name + "(" + y + ") points to " + nm.nodes.get(x).children.get(y).name + ", with a weight of " + nm.NodeWeights(nm.nodes.get(x),nm.nodes.get(x).children.get(y)));
-            }
-        }*/
-      	
+        nm.DefaultTree();
+        try{
+            nm.SaveFile("SAVE.txt");
+        }
+        catch (IOException e){
+
+        }
+
 
     }
 }
 
 //Layout is to have 1 hidden layer and 1 input layer
 //ANN is given a list of options and their weights
-//it has a 
+//it has a
 //ANN design
 class ANN{
-		
-  ArrayList<Node> nodePath;
-  NodeMap nm;
-  Node currentNode;
-  float g1,g2,ga1,ga2,ga3;
-  float hid1,hid2;
-  float out1,out2,out3;
-  
-  //New, Random ANN
-  public ANN(NodeMap _nm){
-  	Random rand = new Random();
-    nm = _nm;
-    currentNode = nm.GetNode("S");
-    nodePath = new ArrayList<Node>();
-    nodePath.add(currentNode);
-    
-    //Generate genes that are between -1.0f and 1.0f
-    g1 = rand.nextFloat()*2.0f-1.0f;
-    g2 = rand.nextFloat()*2.0f-1.0f;
-    ga1 = rand.nextFloat()*2.0f-1.0f;
-    ga2 = rand.nextFloat()*2.0f-1.0f;
-    ga3 = rand.nextFloat()*2.0f-1.0f;
-  }
-  
-  public Node nextNode(){
-    for (int x = 0; x < currentNode.children.size(); x++){
-    	
+
+    ArrayList<Node> nodePath;
+    NodeMap nm;
+    Node currentNode;
+    float g1,g2,ga1,ga2,ga3;
+    float hid1,hid2;
+    float out1,out2,out3;
+
+    //New, Random ANN
+    public ANN(NodeMap _nm){
+        Random rand = new Random();
+        nm = _nm;
+        currentNode = nm.GetNode("S");
+        nodePath = new ArrayList<Node>();
+        nodePath.add(currentNode);
+
+        //Generate genes that are between -1.0f and 1.0f
+        g1 = rand.nextFloat()*2.0f-1.0f;
+        g2 = rand.nextFloat()*2.0f-1.0f;
+        ga1 = rand.nextFloat()*2.0f-1.0f;
+        ga2 = rand.nextFloat()*2.0f-1.0f;
+        ga3 = rand.nextFloat()*2.0f-1.0f;
     }
-    return currentNode;
-  }
-  
+
+    public Node nextNode(){
+        for (int x = 0; x < currentNode.children.size(); x++){
+
+        }
+        return currentNode;
+    }
+
 }
 
 //Basing it off of the attatched file "Sadfig.png"
+//Be able to use default (help.png) [X]
+//Be able to custom create node map [x]
+//Be able to load/save node trees
+//ToString returns totalpath
 class NodeMap{
     ArrayList<Node> nodes;
 
     public NodeMap(){
         nodes = new ArrayList<Node>();
+    }
+
+    public void DefaultTree(){
         Node e = new Node("E");
         Node k = new Node("K");
         Node j = new Node("J");
@@ -86,58 +97,156 @@ class NodeMap{
         Node d = new Node("D");
 
         //Node Adding
-        e.ChildNode(j,2);
-        e.ChildNode(k,7);
-        e.ChildNode(c,4);
+        e.AddChild(j,2);
+        e.AddChild(k,7);
+        e.AddChild(c,4);
         nodes.add(e);
-        k.ChildNode(e, 7);
-        k.ChildNode(j,1);
-        k.ChildNode(g,2);
+        k.AddChild(e, 7);
+        k.AddChild(j,1);
+        k.AddChild(g,2);
         nodes.add(k);
-        j.ChildNode(e, 2);
-        j.ChildNode(k,1);
-        j.ChildNode(g,5);
+        j.AddChild(e, 2);
+        j.AddChild(k,1);
+        j.AddChild(g,5);
         nodes.add(j);
-        g.ChildNode(j,5);
-        g.ChildNode(k,2);
-        g.ChildNode(f,6);
-        g.ChildNode(h,2);
+        g.AddChild(j,5);
+        g.AddChild(k,2);
+        g.AddChild(f,6);
+        g.AddChild(h,2);
         nodes.add(g);
-        h.ChildNode(f,2);
-        h.ChildNode(g,2);
+        h.AddChild(f,2);
+        h.AddChild(g,2);
         nodes.add(h);
-        f.ChildNode(g,6);
-        f.ChildNode(h,2);
-        f.ChildNode(s,3);
+        f.AddChild(g,6);
+        f.AddChild(h,2);
+        f.AddChild(s,3);
         nodes.add(f);
-        s.ChildNode(f,3);
-        s.ChildNode(a,7);
+        s.AddChild(f,3);
+        s.AddChild(a,7);
         nodes.add(s);
-        a.ChildNode(s,7);
-        a.ChildNode(b,3);
+        a.AddChild(s,7);
+        a.AddChild(b,3);
         nodes.add(a);
-        b.ChildNode(a,3);
-        b.ChildNode(d,1);
-        b.ChildNode(c,9);
+        b.AddChild(a,3);
+        b.AddChild(d,1);
+        b.AddChild(c,9);
         nodes.add(b);
-        c.ChildNode(b,9);
-        c.ChildNode(d,3);
-        c.ChildNode(e,4);
+        c.AddChild(b,9);
+        c.AddChild(d,3);
+        c.AddChild(e,4);
         nodes.add(c);
-        d.ChildNode(b,1);
-        d.ChildNode(c,3);
+        d.AddChild(b,1);
+        d.AddChild(c,3);
         nodes.add(d);
+    }
+
+    //Save file written as so
+    //label childweight childweight childweight
+    //for example
+    //a  b2 c1 d7
+    public void SaveFile(String filename) throws FileNotFoundException{
+        File f = new File(filename);
+        if (!f.exists()){
+            try{
+                f.createNewFile();
+            }
+            catch (IOException e){
+
+            }
+        }
+        PrintWriter pw = new PrintWriter(new FileOutputStream(filename));
+        //pw.println( to send )
+        for (int x = 0; x < nodes.size(); x++){
+            pw.print(nodes.get(x).label);           //label
+            for (int y = 0; y < nodes.get(x).children.size(); y++){
+                pw.print(" " + nodes.get(x).children.get(y).label + nodes.get(x).weights.get(y));     //childweight
+            }
+            pw.println();
+        }
+        pw.close();
     }
 
     public Node GetNode(String s){
         if (nodes.size() > 0){
             for (int x = 0; x < nodes.size(); x++){
-                if (nodes.get(x).name.equals(s)){
+                if (nodes.get(x).label.equals(s)){
                     return nodes.get(x);
                 }
             }
         }
         return null;
+    }
+
+    public void CreateMap(){
+        Scanner s = new Scanner(System.in);
+        boolean creating = true;
+        boolean adding = true;
+        System.out.println("CREATING CUSTOM ANN");
+        String input = new String();
+        while (creating){
+            System.out.print(">");
+            input = s.next();
+            //HELP BLOCK
+            if (input.equals("?") || input.equals("help")){
+                System.out.println("'?' 'help':\tDisplays this menu.\n'add' '+' 'new':\tDisplays Add Menu.\n'-' 'remove':\tDisplays Remove Menu.\n'ToString' 'display' 'view': Displays whole Tree");
+            }
+            //ADD BLOCK
+            if (input.equals("add") || input.equals("+") || input.equals("new")){
+                System.out.print("\nlabel>");
+                input = s.next();
+                Node n = new Node(input);
+                System.out.print("\nchildren>");
+                adding = true;
+                while (adding){
+                    input = s.next();
+                    if (input.equals("done")){
+                        adding = false;
+                    }
+                    else if (GetNode(input) != null){
+                        System.out.print("\nweight>");
+                        input = s.next();
+                        n.AddChild(GetNode(input),Integer.parseInt(input));
+                        System.out.println("node " + GetNode(input).label + " has been childed to " + n.label);
+                    }
+                    else{
+                        System.out.println("err: node not found (type done to finish adding children)");
+                    }
+                }
+                System.out.print("\nparents>");
+                adding = true;
+                while (adding){
+                    input = s.next();
+                    if (input.equals("done")){
+                        adding = false;
+                    }
+                    else if (GetNode(input) != null){
+                        System.out.print("\nweight>");
+                        input = s.next();
+                        GetNode(input).AddChild(n,Integer.parseInt(input));
+                        System.out.println("node " + GetNode(input).label + " has been parented to " + n.label);
+                    }
+                    else{
+                        System.out.println("err: node not found (type done to finish adding parents)");
+                    }
+                }
+            }
+            //REMOVE BLOCK
+            if (input.equals("-") || input.equals("remove")){
+                System.out.print("\nlabel>");
+                input = s.next();
+                if (GetNode(input) == null){
+                    System.out.print("err: node not found");
+                }
+                else{
+                    nodes.remove(GetNode(input));
+                }
+            }
+            //TOSTRING BLOCK
+
+            //EASTER EGG BLOCK
+
+
+        }
     }
 
     public int NodeWeights(String nameStart, String nameEnd){
@@ -150,42 +259,44 @@ class NodeMap{
     }
 }
 
+//Needs to have list of children [X]
+//List of links to all children [X]
+//Links need weights [X]
+//ToString displays all children [X]
 class Node{
     ArrayList<Node> children;
-    ArrayList<Integer> weights;
-    String name;
+    ArrayList<Integer> weights; //both children and weights have the same index, aka child A with weight 3 would be in children(x) = A and weights(x) = 3
+    String label;
 
     public Node(String s){
         children = new ArrayList<Node>();
         weights = new ArrayList<Integer>();
-        name = s;
+        label = s;
     }
 
     public int GetChildWeight(Node maybeChild){
         if (children.size() > 0){
             for (int x = 0; x < children.size(); x++){
-                if (children.get(x).name.equals(maybeChild.name)){
+                if (children.get(x).label.equals(maybeChild.label)){
                     return weights.get(x);
                 }
             }
         }
-        return -999999;
+        return -1;
     }
 
-    public void ChildNode(Node n, int weight){
+    public void AddChild(Node n, int weight){
         children.add(n);
         weights.add(weight);
     }
 
-    public Node GetRandomChild(){
-        Random rand = new Random();
-        if (children.size() > 1){
-            return children.get(rand.nextInt(children.size()));
-        }else if (children.size() == 1){
-            return children.get(0);
-        }else{
-            return null;
+    public String ToString(){
+        String s = new String();
+        if (children.size() > 0){
+            for (int x = 0; x < children.size(); x++){
+                s += x + ") " + children.get(x).label + "(" + weights.get(x) + ")\n";
+            }
         }
+        return s;
     }
-
 }
