@@ -8,10 +8,10 @@ To create an ANN to find the fastest path from start to destination.
   c) (DONE) Links should have weights <br />
   d) (DONE) Node should have a ToString to see children <br />
 2) Node Tree <br />
-  a) Be able to use default (see help.png) <br />
-  b) Be able to create my own node tree <br />
-  c) Save/Load node trees <br />
-  d) ToString total path <br />
+  a) (DONE) Be able to use default (see help.png) <br />
+  b) (DONE) Be able to create my own node tree <br />
+  c) (DONE) Save/Load node trees <br />
+  d) (DONE) ToString total path <br />
 3) ANN that can random gen a path from start to finish in tree <br />
   a) Given distance to each node <br />
   b) Blank ANN gets random ANN <br />
