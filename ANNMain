@@ -1,4 +1,5 @@
 import java.io.*;
+import java.lang.reflect.Array;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -24,6 +25,8 @@ public class ANNMain{
         nm.DefaultTree();
         try{
             nm.SaveFile("SAVE.txt");
+            nm.LoadFile("SAVE.txt");
+            System.out.println(nm.ToString());
         }
         catch (IOException e){
 
@@ -35,8 +38,9 @@ public class ANNMain{
 
 //Layout is to have 1 hidden layer and 1 input layer
 //ANN is given a list of options and their weights
-//it has a
-//ANN design
+//ANN randomly generates node's "distance" from itself to end node
+//Blank ANN has a random path
+//ANN has a total value which sums up total distance travelled
 class ANN{
 
     ArrayList<Node> nodePath;
@@ -50,9 +54,7 @@ class ANN{
     public ANN(NodeMap _nm){
         Random rand = new Random();
         nm = _nm;
-        currentNode = nm.GetNode("S");
         nodePath = new ArrayList<Node>();
-        nodePath.add(currentNode);
 
         //Generate genes that are between -1.0f and 1.0f
         g1 = rand.nextFloat()*2.0f-1.0f;
@@ -62,20 +64,81 @@ class ANN{
         ga3 = rand.nextFloat()*2.0f-1.0f;
     }
 
-    public Node nextNode(){
-        for (int x = 0; x < currentNode.children.size(); x++){
+    public void RandomPath(){
+        ArrayList<Node> candidates;
+        ArrayList<Integer> weights;
+        Node endpoint = nm.GetNode("E");
+        currentNode = nm.GetNode("S");
+        boolean done = false;
+        if (endpoint != null){
+            //while nodePath doesn't have the end in it OR done is false
+            while (!nodePath.contains(endpoint) || done == false){
+                //loop through each child of current node
+                candidates = new ArrayList<Node>();
+                weights = new ArrayList<Integer>();
+                for (int x = 0; x < currentNode.children.size(); x++){
+                    //if visited before, skip
+                    if (!nodePath.contains(currentNode.children.get(x))){
+                        candidates.add(currentNode.children.get(x));
+                        weights.add(currentNode.weights.get(x));
+                    }
+                }
+                //those that haven't been visisted get put through algorithm
+                //if no candidates are selected, print err and end
+                if (candidates.size() == 0){
+                    System.out.println("ANN stuck in loop on node " + currentNode.label);
+                    done = true;
+                }
+                else if (candidates.size() == 1){
+                    currentNode = candidates.get(0);
+                }
+                else{
+                    currentNode = NodeCompare(candidates,weights);
+                }
 
+            }
         }
-        return currentNode;
+        else{
+            System.out.println("endpoint does not exist (node with label E)");
+        }
+    }
+
+    public Node NodeCompare(ArrayList<Node> cand, ArrayList<Integer> weights){
+        hid1 = 0;
+        hid2 = 0;
+        float total, oldTotal;
+        for (int x = 0; x < cand.size(); x++){
+            //hid1
+            for (int y = 0; y < weights.size(); y++){
+                hid1 += g1*weights.get(y);
+            }
+            //hid2
+            for (int y = 0; y < weights.size(); y++){
+                hid2 += g2*weights.get(y);
+            }
+            //out1
+            for (int y = 0; y < weights.size(); y++){
+                out1 = hid1*ga1 + hid2*ga1;
+            }
+            //out2
+            for (int y = 0; y < weights.size(); y++){
+                out2 = hid1*ga2 + hid2*ga2;
+            }
+            //out3
+            for (int y = 0; y < weights.size(); y++){
+                out3 = hid1*ga3 + hid2*ga3;
+            }
+            total = out1 + out2 +out3;
+        }
     }
 
 }
 
 //Basing it off of the attatched file "Sadfig.png"
 //Be able to use default (help.png) [X]
-//Be able to custom create node map [x]
-//Be able to load/save node trees
-//ToString returns totalpath
+//Be able to custom create node map [X]
+//Be able to load/save node trees [X]
+//ToString returns totalpath [X]
 class NodeMap{
     ArrayList<Node> nodes;
 
@@ -161,9 +224,56 @@ class NodeMap{
             for (int y = 0; y < nodes.get(x).children.size(); y++){
                 pw.print(" " + nodes.get(x).children.get(y).label + nodes.get(x).weights.get(y));     //childweight
             }
+            pw.print(" ");
             pw.println();
         }
+        pw.print("END");
         pw.close();
+        System.out.println("Saving complete!");
+    }
+
+    public void LoadFile(String filename) throws FileNotFoundException{
+        File f = new File(filename);
+        if (!f.exists()){
+            try{
+                f.createNewFile();
+            }
+            catch (IOException e){
+
+            }
+        }
+        FileReader fr = new FileReader(filename);
+        BufferedReader textreader = new BufferedReader(fr);
+        String line = new String();
+        try{
+            line = textreader.readLine();
+        }
+        catch (IOException e){
+
+        }
+        Node n;
+        while(!line.equals("END")){
+            n = new Node(line.substring(0,1));
+            line = line.substring(2);
+            //System.out.println("Added new node with label " + n.label);
+            //System.out.println("Line is now>" + line);
+            while (line.length() > 1){
+                //System.out.println("Line is now>" + line);
+                n.AddChild(new Node(line.substring(0,line.indexOf(" ")-1)),Integer.parseInt(line.substring(line.indexOf(" ")-1,line.indexOf(" "))));
+                //System.out.println("Node " + line.substring(0,line.indexOf(" ")-1) + " with weight " + Integer.parseInt(line.substring(line.indexOf(" ")-1,line.indexOf(" "))) + " has been childed.");
+                line = line.substring(line.indexOf(" ")+1);
+
+            }
+            try{
+                line = textreader.readLine();
+            }
+            catch (IOException e){
+
+            }
+        }
+        System.out.println("Loading complete!");
+
+
     }
 
     public Node GetNode(String s){
@@ -256,6 +366,18 @@ class NodeMap{
     }
     public int NodeWeights(Node start, Node end){
         return start.GetChildWeight(end);
+    }
+
+    public String ToString(){
+        String s = new String();
+        for (int x = 0; x < nodes.size(); x++){
+            s += nodes.get(x).label;
+            for (int y = 0; y < nodes.get(x).children.size(); y++){
+                s += (" " + nodes.get(x).children.get(y).label + nodes.get(x).weights.get(y));
+            }
+            s += "\n";
+        }
+        return s;
     }
 }
 
