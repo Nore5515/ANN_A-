@@ -26,21 +26,47 @@ public class ANNMain{
         try{
             nm.SaveFile("SAVE.txt");
             nm.LoadFile("SAVE.txt");
-            System.out.println(nm.ToString());
+            //System.out.println(nm.ToString());
         }
         catch (IOException e){
 
         }
+        System.out.println("Pathfinder ANN v1: \n\n");
+        ANN a1 = new ANN(nm);
+        ANN a2 = new ANN(nm);
+        a1.RandomPath();
+        a2.RandomPath();
+        System.out.println(a1.ToString());
+        System.out.println(a2.ToString());
+        System.out.println("VALUE:" + a1.value);
+        System.out.println("VALUE:" + a2.value);
 
+        ANN winningANN;
+        if (a1.value < a2.value){
+            winningANN = a1;
+        }
+        else{
+            winningANN = a2;
+        }
+
+        ANN competetor;
+        while (Math.abs(winningANN.value) > 15){
+            competetor = winningANN.DuplicateANN();
+            System.out.println("Competetor Path:"  + competetor.ToString());
+            if (competetor.value < winningANN.value) {
+                winningANN = competetor;
+            }
+        }
+        System.out.println(winningANN.ToString());
 
     }
 }
 
 //Layout is to have 1 hidden layer and 1 input layer
-//ANN is given a list of options and their weights
-//ANN randomly generates node's "distance" from itself to end node
-//Blank ANN has a random path
-//ANN has a total value which sums up total distance travelled
+//ANN is given a list of options and their weights [X]
+//ANN randomly generates node's "distance" from itself to end node (IGNORE)
+//Blank ANN has a random path [X]
+//ANN has a total value which sums up total distance travelled [X]
 class ANN{
 
     ArrayList<Node> nodePath;
@@ -49,12 +75,14 @@ class ANN{
     float g1,g2,ga1,ga2,ga3;
     float hid1,hid2;
     float out1,out2,out3;
+    float value;
 
     //New, Random ANN
     public ANN(NodeMap _nm){
         Random rand = new Random();
         nm = _nm;
         nodePath = new ArrayList<Node>();
+        value = 0;
 
         //Generate genes that are between -1.0f and 1.0f
         g1 = rand.nextFloat()*2.0f-1.0f;
@@ -64,15 +92,32 @@ class ANN{
         ga3 = rand.nextFloat()*2.0f-1.0f;
     }
 
+    public ANN DuplicateANN(){
+        Random rand = new Random();
+        ANN babby = this;
+        //random gen -2.5 to 2.5
+        babby.g1 = this.g1 * rand.nextFloat()*5.0f-2.5f;
+        babby.g2 = this.g2 * rand.nextFloat()*5.0f-2.5f;
+        babby.ga1 = this.ga1 * rand.nextFloat()*5.0f-2.5f;
+        babby.ga2 = this.ga2 * rand.nextFloat()*5.0f-2.5f;
+        babby.ga3 = this.ga3 * rand.nextFloat()*5.0f-2.5f;
+        babby.value = 0;
+        nodePath = new ArrayList<Node>();
+        babby.RandomPath();
+        return babby;
+    }
+
     public void RandomPath(){
-        ArrayList<Node> candidates;
+        ArrayList<Node> candidates; 
         ArrayList<Integer> weights;
         Node endpoint = nm.GetNode("E");
         currentNode = nm.GetNode("S");
         boolean done = false;
         if (endpoint != null){
             //while nodePath doesn't have the end in it OR done is false
+            nodePath.add(currentNode);
             while (!nodePath.contains(endpoint) || done == false){
+                //System.out.println("iterating");
                 //loop through each child of current node
                 candidates = new ArrayList<Node>();
                 weights = new ArrayList<Integer>();
@@ -83,30 +128,49 @@ class ANN{
                         weights.add(currentNode.weights.get(x));
                     }
                 }
-                //those that haven't been visisted get put through algorithm
-                //if no candidates are selected, print err and end
-                if (candidates.size() == 0){
-                    System.out.println("ANN stuck in loop on node " + currentNode.label);
+
+                //If nodePath reached end, quit
+                if (currentNode.label.equals("E")){
+                    //System.out.println("REACHED ENDPOINT");
                     done = true;
                 }
-                else if (candidates.size() == 1){
-                    currentNode = candidates.get(0);
-                }
                 else{
-                    currentNode = NodeCompare(candidates,weights);
+                    //those that haven't been visisted get put through algorithm
+                    //if no candidates are selected, print err and end
+                    if (candidates.size() == 0){
+                        //System.out.println("ANN stuck in loop on node " + currentNode.label);
+                        done = true;
+                    }
+                    else if (candidates.size() == 1){
+                        //System.out.println("ANN added only candidate " + currentNode.label);
+                        if (!currentNode.equals(candidates.get(0))){
+                            currentNode = candidates.get(0);
+                        }
+                    }
+                    else{
+                        //System.out.println("ANN comparing candidates of " + currentNode.label);
+                        currentNode = NodeCompare(candidates,weights);
+                    }
+                    nodePath.add(currentNode);
                 }
-
             }
         }
         else{
             System.out.println("endpoint does not exist (node with label E)");
+        }
+        //calc value based on total weights traveled
+        for (int x = 0; x < nodePath.size()-1; x++){
+            //System.out.println(nodePath.get(x).label);
+            value += nodePath.get(x).GetChildWeight(nodePath.get(x+1));
         }
     }
 
     public Node NodeCompare(ArrayList<Node> cand, ArrayList<Integer> weights){
         hid1 = 0;
         hid2 = 0;
+        Node winner = new Node("ERR");
         float total, oldTotal;
+        oldTotal = -999999;
         for (int x = 0; x < cand.size(); x++){
             //hid1
             for (int y = 0; y < weights.size(); y++){
@@ -129,7 +193,22 @@ class ANN{
                 out3 = hid1*ga3 + hid2*ga3;
             }
             total = out1 + out2 +out3;
+            if (total > oldTotal){
+                winner = cand.get(x);
+                oldTotal = total;
+            }
         }
+        return winner;
+    }
+
+    public String ToString(){
+        String s = "";
+        s += "NodePath: ";
+        for (int x = 0; x < nodePath.size(); x++){
+            s += nodePath.get(x).label + ">";
+        }
+
+        return s;
     }
 
 }
