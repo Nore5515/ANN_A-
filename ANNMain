@@ -50,10 +50,12 @@ public class ANNMain{
         }
 
         ANN competetor;
-        while (Math.abs(winningANN.value) > 15){
+        //while (Math.abs(winningANN.value) > 13){
+        for (int x = 0; x < 100; x++){
             competetor = winningANN.DuplicateANN();
-            System.out.println("Competetor Path:"  + competetor.ToString());
+            System.out.println("Competetor Path:"  + competetor.ToString() + " vs " + winningANN.ToString());
             if (competetor.value < winningANN.value) {
+                System.out.println("upgrading");
                 winningANN = competetor;
             }
         }
@@ -90,25 +92,52 @@ class ANN{
         ga1 = rand.nextFloat()*2.0f-1.0f;
         ga2 = rand.nextFloat()*2.0f-1.0f;
         ga3 = rand.nextFloat()*2.0f-1.0f;
+        System.out.println(g1 + "," + g2 + "," + ga1 + "," + ga2 + ","+ ga3);
     }
 
     public ANN DuplicateANN(){
         Random rand = new Random();
         ANN babby = this;
         //random gen -2.5 to 2.5
-        babby.g1 = this.g1 * rand.nextFloat()*5.0f-2.5f;
-        babby.g2 = this.g2 * rand.nextFloat()*5.0f-2.5f;
-        babby.ga1 = this.ga1 * rand.nextFloat()*5.0f-2.5f;
-        babby.ga2 = this.ga2 * rand.nextFloat()*5.0f-2.5f;
-        babby.ga3 = this.ga3 * rand.nextFloat()*5.0f-2.5f;
+        babby.g1 = this.g1 * (rand.nextFloat()*(5.0f-2.5f));
+        babby.g2 = this.g2 * (rand.nextFloat()*(5.0f-2.5f));
+        babby.ga1 = this.ga1 * (rand.nextFloat()*(5.0f-2.5f));
+        babby.ga2 = this.ga2 * (rand.nextFloat()*(5.0f-2.5f));
+        babby.ga3 = this.ga3 * (rand.nextFloat()*(5.0f-2.5f));
+        if (babby.g1 > 20.0f){
+            babby.g1 = 20.0f;
+        } else if (babby.g1 < -20.0f) {
+            babby.g1 = -20.0f;
+        }
+        if (babby.g2 > 20.0f){
+            babby.g2 = 20.0f;
+        }else if (babby.g2 < -20.0f) {
+            babby.g2 = -20.0f;
+        }
+        if (babby.ga1 > 20.0f){
+            babby.ga1 = 20.0f;
+        }else if (babby.ga1 < -20.0f) {
+            babby.ga1 = -20.0f;
+        }
+        if (babby.ga2 > 20.0f){
+            babby.ga2 = 20.0f;
+        }else if (babby.ga2 < -20.0f) {
+            babby.ga2 = -20.0f;
+        }
+        if (babby.ga3 > 20.0f){
+            babby.ga3 = 20.0f;
+        }else if (babby.ga3 < -20.0f) {
+            babby.ga3 = -20.0f;
+        }
         babby.value = 0;
         nodePath = new ArrayList<Node>();
+        System.out.println(babby.g1 + "," + babby.g2 + "," + babby.ga1 + "," + babby.ga2 + "," + babby.ga3);
         babby.RandomPath();
         return babby;
     }
 
     public void RandomPath(){
-        ArrayList<Node> candidates; 
+        ArrayList<Node> candidates;
         ArrayList<Integer> weights;
         Node endpoint = nm.GetNode("E");
         currentNode = nm.GetNode("S");
@@ -170,32 +199,23 @@ class ANN{
         hid2 = 0;
         Node winner = new Node("ERR");
         float total, oldTotal;
-        oldTotal = -999999;
+        oldTotal = 0;
         for (int x = 0; x < cand.size(); x++){
             //hid1
-            for (int y = 0; y < weights.size(); y++){
-                hid1 += g1*weights.get(y);
-            }
+            hid1 += g1*weights.get(x);
             //hid2
-            for (int y = 0; y < weights.size(); y++){
-                hid2 += g2*weights.get(y);
-            }
+            hid2 += g2*weights.get(x);
             //out1
-            for (int y = 0; y < weights.size(); y++){
-                out1 = hid1*ga1 + hid2*ga1;
-            }
+            out1 = hid1*ga1 + hid2*ga1;
             //out2
-            for (int y = 0; y < weights.size(); y++){
-                out2 = hid1*ga2 + hid2*ga2;
-            }
+            out2 = hid1*ga2 + hid2*ga2;
             //out3
-            for (int y = 0; y < weights.size(); y++){
-                out3 = hid1*ga3 + hid2*ga3;
-            }
+            out3 = hid1*ga3 + hid2*ga3;
             total = out1 + out2 +out3;
-            if (total > oldTotal){
+            System.out.println(Math.abs(total) + ">" + oldTotal);
+            if (Math.abs(total) > oldTotal){
                 winner = cand.get(x);
-                oldTotal = total;
+                oldTotal = Math.abs(total);
             }
         }
         return winner;
