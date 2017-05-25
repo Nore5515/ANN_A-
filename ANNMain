@@ -23,14 +23,14 @@ public class ANNMain{
         System.out.println("Hello world!");
         NodeMap nm = new NodeMap();
         nm.DefaultTree();
-        try{
+        /*try{
             nm.SaveFile("SAVE.txt");
             nm.LoadFile("SAVE.txt");
             //System.out.println(nm.ToString());
         }
         catch (IOException e){
 
-        }
+        }*/
         System.out.println("Pathfinder ANN v1: \n\n");
         ANN a1 = new ANN(nm);
         ANN a2 = new ANN(nm);
@@ -306,6 +306,7 @@ class NodeMap{
     //label childweight childweight childweight
     //for example
     //a  b2 c1 d7
+  /*
     public void SaveFile(String filename) throws FileNotFoundException{
         File f = new File(filename);
         if (!f.exists()){
@@ -374,7 +375,7 @@ class NodeMap{
 
 
     }
-
+*/
     public Node GetNode(String s){
         if (nodes.size() > 0){
             for (int x = 0; x < nodes.size(); x++){
